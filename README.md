@@ -1,2 +1,2 @@
-# ClothingStoreFranchise.NetCore.Sales
+# ClothingStoreFranchise.Spring.Sales
 Microservice that manages sales.
