@@ -1,7 +1,5 @@
 package clothingstorefranchise.spring.sales.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import clothingstorefranchise.spring.common.types.IEntityDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

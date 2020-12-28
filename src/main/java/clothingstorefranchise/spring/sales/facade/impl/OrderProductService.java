@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import clothingstorefranchise.spring.sales.dtos.OrderDto;
 import clothingstorefranchise.spring.sales.dtos.OrderProductBaseDto;
 import clothingstorefranchise.spring.sales.dtos.OrderProductDto;
 import clothingstorefranchise.spring.sales.dtos.OrderProductWithOrderDto;
 import clothingstorefranchise.spring.sales.facade.IOrderProductService;
+import clothingstorefranchise.spring.sales.model.Order;
 import clothingstorefranchise.spring.sales.model.OrderProduct;
 import clothingstorefranchise.spring.sales.repositories.IOrderProductRepository;
 
@@ -22,14 +24,19 @@ public class OrderProductService extends BaseService<OrderProduct, Long, IOrderP
 		super.updateBase(dtos);
 	}
 	
+	public OrderProductWithOrderDto update(OrderProductWithOrderDto orderProductDto) {
+		OrderProduct orderProduct = super.updateBase(orderProductDto);
+		return map(orderProduct, OrderProductWithOrderDto.class);
+	}
+	
 	public List<OrderProductWithOrderDto> loadByState(int state){
 		List<OrderProduct> orderProducts = repository.findByState(state);
 		return mapList(orderProducts, OrderProductWithOrderDto.class);
 	}
 	
-	public List<OrderProductDto> loadByWarehouseId(Long warehouseId){
+	public List<OrderProductWithOrderDto> loadByWarehouseId(Long warehouseId){
 		List<OrderProduct> orderProducts = repository.findByWarehouseId(warehouseId);
-		return mapList(orderProducts, OrderProductDto.class);
+		return mapList(orderProducts, OrderProductWithOrderDto.class);
 	}
 	
 	public List<OrderProductDto> loadByWarehouseIdAndState(Long warehouseId, int state){

@@ -10,9 +10,11 @@ public interface IOrderProductService {
 	
 	void update(List<OrderProductBaseDto> dtos);
 	
+	OrderProductWithOrderDto update(OrderProductWithOrderDto orderProductDto);
+	
 	List<OrderProductWithOrderDto> loadByState(int state);
 	
-	List<OrderProductDto> loadByWarehouseId(Long warehouseId);
+	List<OrderProductWithOrderDto> loadByWarehouseId(Long warehouseId);
 	
 	List<OrderProductDto> loadByWarehouseIdAndState(Long warehouseId, int state);
 }
