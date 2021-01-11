@@ -3,7 +3,7 @@
 **Description**
 ----------------
 
-Microservice that manages the sales of the clothing store frnachise. This microservice offers the end points for online order management and for sales in physical stores.
+Microservice that manages the sales of the clothing store franchise. This microservice offers the end points for online order management and for sales in physical stores.
 
 **API Design**
 ----------------
