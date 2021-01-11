@@ -13,7 +13,7 @@ Microservice that manages the sales of the clothing store frnachise. This micros
 **Database Design**
 ----------------
 
-![databaseDesign](https://github.com/ClothingStoreFranchise/ClothingStoreFranchise.Spring.Sales/blob/develop/figures/salesDB.png)
+![databaseDesign](https://github.com/ClothingStoreFranchise/ClothingStoreFranchise.Spring.Sales/blob/develop/figures/SalesDB.png)
 
 **Architecture Design**
 ----------------
