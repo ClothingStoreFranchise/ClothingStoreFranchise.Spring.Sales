@@ -8,14 +8,14 @@ Microservice that manages the sales of the clothing store frnachise. This micros
 **API Design**
 ----------------
 
-![apiDesign](https://github.com/ClothingStoreFranchise/ClothingStoreFranchise.Spring.Sales/blob/spanish/figures/salesApi.png)
+![apiDesign](https://github.com/ClothingStoreFranchise/ClothingStoreFranchise.Spring.Sales/blob/develop/figures/salesApi.png)
 
 **Database Design**
 ----------------
 
-![databaseDesign](https://github.com/ClothingStoreFranchise/ClothingStoreFranchise.Spring.Sales/blob/spanish/figures/salesDB.png)
+![databaseDesign](https://github.com/ClothingStoreFranchise/ClothingStoreFranchise.Spring.Sales/blob/develop/figures/salesDB.png)
 
 **Architecture Design**
 ----------------
 
-![architectureDesign](https://github.com/ClothingStoreFranchise/ClothingStoreFranchise.Spring.Sales/blob/spanish/figures/SalesComponent.png)
+![architectureDesign](https://github.com/ClothingStoreFranchise/ClothingStoreFranchise.Spring.Sales/blob/develop/figures/SalesComponent.png)
