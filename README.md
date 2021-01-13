@@ -1,4 +1,4 @@
-# ClothingStoreFranchise.Spring.Sales
+# ClothingStoreFranchise: Sales Microservice
 
 **Description**
 ----------------
