@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,7 @@ public class OrderController {
 	
 	@PostMapping
 	public ResponseEntity<OrderWithOrderProductsDto> create(@Valid @RequestBody OrderWithOrderProductsDto orderDto) {
-		return ResponseEntity.ok(orderService.create(orderDto));
+		return new ResponseEntity<>(orderService.create(orderDto), HttpStatus.CREATED);
 	}
 	
 	@PutMapping

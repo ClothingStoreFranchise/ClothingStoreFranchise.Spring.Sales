@@ -2,17 +2,14 @@ package clothingstorefranchise.spring.sales.dtos.events;
 
 import java.util.List;
 
+import clothingstorefranchise.spring.common.event.IntegrationEvent;
 import clothingstorefranchise.spring.sales.dtos.OrderProductBaseDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ValidateInventoryEvent {
+@Getter
+@Setter
+public class ValidateInventoryEvent extends IntegrationEvent {
 	
 	private List<OrderProductBaseDto> orderProducts;
 }

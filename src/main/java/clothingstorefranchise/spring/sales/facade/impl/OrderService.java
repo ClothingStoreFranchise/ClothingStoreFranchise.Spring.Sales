@@ -11,7 +11,9 @@ import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import clothingstorefranchise.spring.common.exceptions.InvalidDataException;
 import clothingstorefranchise.spring.sales.RabbitMqConfig;
 import clothingstorefranchise.spring.sales.dtos.OrderDto;
 import clothingstorefranchise.spring.sales.dtos.OrderWithOrderProductsDto;
@@ -20,20 +22,28 @@ import clothingstorefranchise.spring.sales.facade.IOrderService;
 import clothingstorefranchise.spring.sales.model.Order;
 import clothingstorefranchise.spring.sales.model.OrderProduct;
 import clothingstorefranchise.spring.sales.repositories.IOrderRepository;
+import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
 
 @Service
-public class OrderService extends BaseService<Order, Long, IOrderRepository> implements IOrderService {
+public class OrderService extends BaseService<Order, Long, IOrderRepository, OrderWithOrderProductsDto> implements IOrderService {
 	public static final Logger LOGGER = LoggerFactory.getLogger(OrderService.class);
 
 	@Autowired
 	private RabbitTemplate template;
 	
+	@Autowired
+	private IntegrationEventLogService integrationEventService;
+	
 	public OrderService(IOrderRepository orderRepository) {
 		super(Order.class, orderRepository);
 	}
 	
+	@Transactional
 	public OrderWithOrderProductsDto create(OrderWithOrderProductsDto orderDto) {
 		orderDto.setDate(LocalDateTime.now());
+		
+		validationActions(orderDto);
+		
 		Order order = map(orderDto, Order.class);
 		for(OrderProduct product : order.getOrderProducts()) {
 			product.setOrder(order);
@@ -41,6 +51,7 @@ public class OrderService extends BaseService<Order, Long, IOrderRepository> imp
 		Order orderCreated = repository.save(order);
 		
 		ValidateInventoryEvent validateInventoryEvent = map(orderCreated, ValidateInventoryEvent.class);
+		integrationEventService.saveEvent(validateInventoryEvent);
 		sendMessage(validateInventoryEvent);
 		return map(order, OrderWithOrderProductsDto.class);
 	}
@@ -74,10 +85,28 @@ public class OrderService extends BaseService<Order, Long, IOrderRepository> imp
             messageProperties.setCorrelationId(correlationId.toString());
             return message;
         };
-
+        
         template.convertAndSend(RabbitMqConfig.EXCHANGE_NAME,
         		ValidateInventoryEvent.class.getSimpleName(),
                 validateInventoryEvent,
                 messagePostProcessor);
-    }	
+	}
+
+	protected boolean isValid(OrderWithOrderProductsDto dto) {
+		return nullValidation(dto);
+	}
+	
+	@Override
+	protected void validationActions(OrderWithOrderProductsDto dto) {
+		if(!isValid(dto)) 
+			throw new InvalidDataException("Invalid data");
+	}
+	
+	private static boolean nullValidation(OrderWithOrderProductsDto dto) {
+		return dto != null
+			&& dto.getCustomerId() != null
+			&& !dto.getOrderProducts().isEmpty()
+			&& !StringUtils.isAnyBlank(dto.getCard())
+			&& !StringUtils.isAnyBlank(dto.getAddress());
+	}
 }

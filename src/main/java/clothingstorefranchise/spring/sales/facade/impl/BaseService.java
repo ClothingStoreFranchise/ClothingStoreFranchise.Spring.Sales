@@ -1,7 +1,6 @@
 package clothingstorefranchise.spring.sales.facade.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,15 +8,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import clothingstorefranchise.spring.common.exceptions.EntityDoesNotExistException;
 import clothingstorefranchise.spring.common.types.IEntityDto;
 
 public abstract class BaseService
-	<TEntity , TId, TRepository extends JpaRepository<TEntity, TId>> {
+	<TEntity , TId, TRepository extends JpaRepository<TEntity, TId>, TDto extends IEntityDto<TId>> {
 	//, TEntityDto extends IEntityDto<TId>
 	@Autowired
 	protected ModelMapper modelMapper;
 	
-	public TRepository repository;
+	protected TRepository repository;
 	
 	private final Class<TEntity> entityClass;
 	
@@ -46,9 +46,7 @@ public abstract class BaseService
 	}
 	
 	public TEntity loadBase(TId id) {
-		//error control
-		TEntity entity = repository.findById(id).get();
-		return entity;
+		return repository.findById(id).orElseThrow(() -> new EntityDoesNotExistException("Entity not found "+id));
 	}
 	
 	public List<TEntity> loadAllBase(){
@@ -62,9 +60,10 @@ public abstract class BaseService
 		return repository.save(entity);
 	}
 	
-	public <TEntityDto extends IEntityDto<TId>> List<TEntity> updateBase(List<TEntityDto> entityDtos) {
+	public  List<TEntity> updateBase(List<TDto> entityDtos) {
 		List<TEntity> entities = new ArrayList<>();
-		for(TEntityDto entityDto : entityDtos) {
+		for(TDto entityDto : entityDtos) {
+			validationActions(entityDto);
 			TEntity entity=loadBase(entityDto.key());
 			map(entityDto, entity);
 			entities.add(entity);
@@ -75,6 +74,8 @@ public abstract class BaseService
 	public void delete(TId id) {
 		repository.deleteById(id);
 	}
+	
+	protected abstract void validationActions(TDto dto);
 	
 	protected <TSource, TTarget> TTarget map(TSource source, Class<TTarget> targetClass) {
 	    return modelMapper.map(source, targetClass);
